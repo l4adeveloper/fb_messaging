@@ -91,15 +91,15 @@ async function selectPage(pageId) {
       const result = await response.json()
       selectedPage = result.page
 
-      // Update UI
+      // Update UI - remove selected class from all pages
       document.querySelectorAll(".page-item").forEach((item) => {
         item.classList.remove("selected")
       })
 
-      // Find the clicked page item by pageId
-      const clickedPageItem = document.querySelector(`[data-page-id="${pageId}"]`)
-      if (clickedPageItem) {
-        clickedPageItem.classList.add("selected")
+      // Add selected class to clicked page using data attribute
+      const selectedPageElement = document.querySelector(`[data-page-id="${pageId}"]`)
+      if (selectedPageElement) {
+        selectedPageElement.classList.add("selected")
       }
 
       // Show conversations section
