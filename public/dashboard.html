@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Facebook Messenger Integration</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="dashboard-container">
+         Header 
+        <header class="dashboard-header">
+            <div class="header-content">
+                <h1>Facebook Messenger Dashboard</h1>
+                <div id="user-info" class="user-info">
+                     User info will be loaded here 
+                </div>
+            </div>
+        </header>
+
+         Main Dashboard Content 
+        <div class="dashboard-main">
+             Sidebar 
+            <aside class="dashboard-sidebar">
+                 Page Selection 
+                <div class="sidebar-section">
+                    <h3>Chọn Trang Facebook</h3>
+                    <div id="page-list" class="page-list">
+                         Pages will be loaded here 
+                    </div>
+                </div>
+
+                 Conversations 
+                <div class="sidebar-section" id="conversations-section" style="display: none;">
+                    <h3>Cuộc Hội Thoại</h3>
+                    <div id="conversation-list" class="conversation-list">
+                         Conversations will be loaded here 
+                    </div>
+                </div>
+            </aside>
+
+             Main Content Area 
+            <main class="dashboard-content">
+                 Welcome Message 
+                <div id="welcome-message" class="welcome-message">
+                    <div class="welcome-card">
+                        <h2>Chào mừng đến với Dashboard</h2>
+                        <p>Vui lòng chọn một trang Facebook để bắt đầu quản lý tin nhắn.</p>
+                        <div class="feature-list">
+                            <div class="feature-item">
+                                <span class="feature-icon">💬</span>
+                                <span>Nhận và trả lời tin nhắn</span>
+                            </div>
+                            <div class="feature-item">
+                                <span class="feature-icon">🔔</span>
+                                <span>Gửi thông báo một lần (OTN)</span>
+                            </div>
+                            <div class="feature-item">
+                                <span class="feature-icon">👥</span>
+                                <span>Quản lý nhiều cuộc hội thoại</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                 Chat Interface 
+                <div id="chat-interface" class="chat-interface" style="display: none;">
+                     Chat Header 
+                    <div class="chat-header">
+                        <div class="chat-user-info">
+                            <img id="chat-user-avatar" src="/placeholder.svg" alt="User Avatar" class="user-avatar">
+                            <div class="user-details">
+                                <h4 id="chat-user-name">Chọn cuộc hội thoại</h4>
+                                <span id="chat-user-status" class="user-status">Offline</span>
+                            </div>
+                        </div>
+                        <div class="chat-actions">
+                            <button class="action-btn" onclick="refreshMessages()">
+                                <span class="refresh-icon">🔄</span>
+                            </button>
+                        </div>
+                    </div>
+
+                     Messages Area 
+                    <div class="messages-container">
+                        <div id="messages-list" class="messages-list">
+                             Messages will be loaded here 
+                        </div>
+                    </div>
+
+                     Message Input 
+                    <div class="message-input-container">
+                        <div class="message-input-wrapper">
+                            <textarea 
+                                id="message-input" 
+                                placeholder="Nhập tin nhắn..." 
+                                rows="1"
+                                onkeypress="handleMessageKeyPress(event)"
+                            ></textarea>
+                            <button class="send-message-btn" onclick="sendQuickMessage()">
+                                <span class="send-icon">➤</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                 Message Forms 
+                <div id="messaging-section" class="messaging-section">
+                     Regular Message Form 
+                    <div class="message-form-card">
+                        <h3>Gửi Tin Nhắn</h3>
+                        <form class="message-form" onsubmit="sendMessage(event)">
+                            <div class="form-group">
+                                <label for="recipient-id">ID Người Nhận:</label>
+                                <input type="text" id="recipient-id" required placeholder="Nhập Facebook User ID">
+                            </div>
+                            <div class="form-group">
+                                <label for="message-text">Nội Dung Tin Nhắn:</label>
+                                <textarea id="message-text" required placeholder="Nhập nội dung tin nhắn..."></textarea>
+                            </div>
+                            <button type="submit" class="send-btn">Gửi Tin Nhắn</button>
+                        </form>
+                    </div>
+
+                     OTN Form 
+                    <div class="message-form-card">
+                        <h3>Gửi Thông Báo Một Lần (OTN)</h3>
+                        <form class="message-form" onsubmit="sendOTN(event)">
+                            <div class="form-group">
+                                <label for="otn-recipient-id">ID Người Nhận:</label>
+                                <input type="text" id="otn-recipient-id" required placeholder="Nhập Facebook User ID">
+                            </div>
+                            <div class="form-group">
+                                <label for="otn-token">OTN Token:</label>
+                                <input type="text" id="otn-token" required placeholder="Nhập OTN token">
+                            </div>
+                            <div class="form-group">
+                                <label for="otn-message">Nội Dung Thông Báo:</label>
+                                <textarea id="otn-message" required placeholder="Nhập nội dung thông báo..."></textarea>
+                            </div>
+                            <button type="submit" class="send-btn otn-btn">Gửi OTN</button>
+                        </form>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+     Loading Overlay 
+    <div id="loading-overlay" class="loading-overlay" style="display: none;">
+        <div class="loading-spinner"></div>
+        <p>Đang tải...</p>
+    </div>
+
+    <script src="dashboard.js"></script>
+</body>
+</html>
