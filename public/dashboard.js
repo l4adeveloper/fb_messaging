@@ -493,36 +493,64 @@ function showLoading(show) {
 
 // Show notification
 function showNotification(message, type = "info") {
+  const container = document.getElementById("notification-container") || document.body
+
   const notification = document.createElement("div")
   notification.className = `notification ${type}`
   notification.textContent = message
 
   notification.style.cssText = `
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    padding: 15px 20px;
-    border-radius: 6px;
+    padding: 12px 16px;
+    border-radius: 8px;
     color: white;
     font-weight: 500;
-    z-index: 1000;
-    max-width: 300px;
+    max-width: 320px;
     word-wrap: break-word;
-    ${type === "success" ? "background: #28a745;" : ""}
-    ${type === "error" ? "background: #dc3545;" : ""}
-    ${type === "info" ? "background: #17a2b8;" : ""}
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+    ${type === "success" ? "background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);" : ""}
+    ${type === "error" ? "background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);" : ""}
+    ${type === "info" ? "background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);" : ""}
   `
 
-  document.body.appendChild(notification)
+  if (container.id === "notification-container") {
+    container.appendChild(notification)
+  } else {
+    notification.style.position = "fixed"
+    notification.style.top = "20px"
+    notification.style.right = "20px"
+    notification.style.zIndex = "10000"
+    container.appendChild(notification)
+  }
 
+  // Animate in
   setTimeout(() => {
-    if (notification.parentNode) {
-      notification.parentNode.removeChild(notification)
-    }
-  }, 5000)
+    notification.style.transform = "translateX(0)"
+  }, 100)
+
+  // Animate out and remove
+  setTimeout(() => {
+    notification.style.transform = "translateX(100%)"
+    setTimeout(() => {
+      if (notification.parentNode) {
+        notification.parentNode.removeChild(notification)
+      }
+    }, 300)
+  }, 4700)
 }
 
 // Cleanup on page unload
 window.addEventListener("beforeunload", () => {
   stopMessagesPolling()
 })
+
+function autoResizeTextarea(textarea) {
+  textarea.style.height = "auto"
+  textarea.style.height = Math.min(textarea.scrollHeight, 120) + "px"
+}
+
+function toggleChatInfo() {
+  // Placeholder for future chat info panel
+  showNotification("Tính năng thông tin cuộc hội thoại sẽ được thêm sau", "info")
+}
