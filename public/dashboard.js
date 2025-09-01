@@ -56,9 +56,18 @@ function displayPages() {
     pageListElement.innerHTML = currentUser.pages
       .map(
         (page) => `
-            <div class="page-item" onclick="selectPage('${page.id}')">
-                <h4>${page.name}</h4>
-                <p>ID: ${page.id} | ${page.category}</p>
+            <div class="page-item" data-page-id="${page.id}" onclick="selectPage('${page.id}')">
+                <div class="page-avatar">
+                    <img src="/facebook-page-icon.png" alt="${page.name}" />
+                </div>
+                <div class="page-info">
+                    <h4>${page.name}</h4>
+                    <p class="page-category">${page.category}</p>
+                    <p class="page-id">ID: ${page.id}</p>
+                </div>
+                <div class="page-status">
+                    <span class="status-dot"></span>
+                </div>
             </div>
         `,
       )
@@ -86,7 +95,12 @@ async function selectPage(pageId) {
       document.querySelectorAll(".page-item").forEach((item) => {
         item.classList.remove("selected")
       })
-      event.target.closest(".page-item").classList.add("selected")
+
+      // Find the clicked page item by pageId
+      const clickedPageItem = document.querySelector(`[data-page-id="${pageId}"]`)
+      if (clickedPageItem) {
+        clickedPageItem.classList.add("selected")
+      }
 
       // Show conversations section
       const conversationsSection = document.getElementById("conversations-section")
@@ -111,11 +125,12 @@ async function selectPage(pageId) {
 
       showNotification(`Đã chọn trang: ${selectedPage.name}`, "success")
     } else {
-      showNotification("Không thể chọn trang", "error")
+      const errorData = await response.json()
+      showNotification(`Không thể chọn trang: ${errorData.error || "Lỗi không xác định"}`, "error")
     }
   } catch (error) {
     console.error("Error selecting page:", error)
-    showNotification("Lỗi khi chọn trang", "error")
+    showNotification("Lỗi kết nối khi chọn trang", "error")
   } finally {
     showLoading(false)
   }
@@ -151,14 +166,23 @@ function displayConversations(conversations) {
       const lastMessageText =
         conversation.lastMessage?.text || conversation.lastMessage?.payload || "[Tin nhắn không có văn bản]"
       const unreadClass = conversation.unreadCount > 0 ? "unread" : ""
+      const lastMessageTime = conversation.lastMessage?.createdAt
+        ? new Date(conversation.lastMessage.createdAt).toLocaleTimeString("vi-VN", {
+            hour: "2-digit",
+            minute: "2-digit",
+          })
+        : ""
 
       return `
-        <div class="conversation-item ${unreadClass}" onclick="selectConversation('${conversation.senderId}')">
-          <img src="${conversation.senderInfo?.profilePic || "/placeholder.svg?height=40&width=40"}" 
+        <div class="conversation-item ${unreadClass}" data-sender-id="${conversation.senderId}" onclick="selectConversation('${conversation.senderId}')">
+          <img src="${conversation.senderInfo?.profilePic || "/diverse-user-avatars.png"}" 
                alt="${conversation.senderInfo?.name || "User"}" 
                class="user-avatar">
           <div class="conversation-info">
-            <div class="conversation-name">${conversation.senderInfo?.name || "Unknown User"}</div>
+            <div class="conversation-header">
+              <div class="conversation-name">${conversation.senderInfo?.name || "Unknown User"}</div>
+              ${lastMessageTime ? `<div class="conversation-time">${lastMessageTime}</div>` : ""}
+            </div>
             <div class="conversation-preview">${lastMessageText}</div>
           </div>
           ${conversation.unreadCount > 0 ? `<div class="unread-badge">${conversation.unreadCount}</div>` : ""}
@@ -176,7 +200,12 @@ async function selectConversation(senderId) {
   document.querySelectorAll(".conversation-item").forEach((item) => {
     item.classList.remove("active")
   })
-  event.target.closest(".conversation-item").classList.add("active")
+
+  // Find the clicked conversation item
+  const clickedConversationItem = document.querySelector(`[data-sender-id="${senderId}"]`)
+  if (clickedConversationItem) {
+    clickedConversationItem.classList.add("active")
+  }
 
   // Mark as read
   await markConversationAsRead(senderId)
