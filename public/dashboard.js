@@ -271,7 +271,7 @@ function displayMessages(messages) {
               : ""
           }
           <div class="message-bubble">
-            <div class="message-text">${message.text || message.payload || "[Tin nhắn không có văn bản]"}</div>
+            <div class="message-text">${message.text || message.payload || "[Tin nhắn không có 1 văn bản]"}</div>
             <div class="message-time">${time}</div>
           </div>
         </div>
